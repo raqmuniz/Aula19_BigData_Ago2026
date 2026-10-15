@@ -89,3 +89,51 @@ try:
 
 except Exception as e:
     print(f'Erro ao analizar a distribuição {e}')
+
+
+#Desde 2003 os dados de estelionato foram computados por município, no estado do Rio de Janeiro. AS medidas de média e mediana (medidas de tendência central)
+#não mostraram um padrão claro, pois a distância entre essas duas medidas foi maior que 50%
+# De acordo com o calculo dos quartis, 25% dos dados mostram os períodos com menores valores de estelionato, e 75% dos dados mostram os períodos com maiores valores
+# De um modo geral, os valores de menores e maiores quantidades de casos de estelionato mostram uma tendência de aumento dos casos, com o passar dos anos.
+    
+try:
+#o iqr é o intervalo interquartil (50% dos dados centrais) iqr = q3 - q1 (amplitude dos dados centrais)
+    iqr = q3 - q1
+
+    #calculando os limites
+    #superior
+    limite_superior = q3 + (1.5 * iqr)
+
+    #inferior
+    limite_inferior = q1 - (1.5 * iqr)
+
+    print(f'\nLimite superior: {limite_superior}')
+    print(f'\nLimite inferior: {limite_inferior}')
+
+#filtrando os outliers menores    
+    df_estelionato_outliers_menores = (
+        df_estelionato[df_estelionato['estelionato'] < limite_inferior]
+    )
+
+    print('\nMunicípios com outliers inferiores')
+    print(30*'-')
+    if len(df_estelionato_outliers_menores) == 0:
+        print('Não há outliers inferiores')
+    else:
+        print(df_estelionato_outliers_menores)
+
+
+except Exception as e:
+    print(f'Erro ao analizar a distribuição {e}')
+
+#filtrando os outliers menores    
+    df_estelionato_outliers_maiores = (
+        df_estelionato[df_estelionato['estelionato'] > limite_superior]
+    )
+    print('\nMunicípios com outliers superiores')
+    print(30*'-')
+
+    if len(df_estelionato_outliers_maiores) == 0:
+        print('Não há outliers superiores')
+    else:
+        print(df_estelionato_outliers_maiores)
